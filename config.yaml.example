@@ -1,0 +1,26 @@
+camera:
+  index: 0
+  width: 960
+  height: 540
+
+cursor:
+  smooth_factor: 0.2
+  dead_zone: 0.05
+
+gesture:
+  static_model_path: ""
+  dynamic_model_path: ""
+  hand_landmarker_path: "weights/hand_landmarker.task"
+  static_confidence: 0.6
+  dynamic_confidence: 0.6
+  max_idle_frames: 15
+
+scroll:
+  speed_scale: 5.0
+  debounce_frames: 5
+
+dynamic_hagrid:
+  enabled: false
+  detector_path: "dynamic_gestures/models/hand_detector.onnx"
+  classifier_path: "dynamic_gestures/models/crops_classifier.onnx"
+  debug: false

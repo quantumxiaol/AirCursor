@@ -1,0 +1,37 @@
+[project]
+name = "aircursor"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "setuptools>=45",
+    "mediapipe>=0.10.14",
+    "opencv-python>=4.8,<5.0",
+    "numpy==1.23.5",
+    "protobuf>=4.25.3,<5.0",
+    "pynput>=1.7,<2.0",
+    "PyYAML>=6.0,<7.0",
+    "torch>=2.0,<3.0",
+    "torchvision>=0.24.0",
+    "torchaudio>=2.9.0",
+    "Pillow>=10.0,<11.0",
+    "PyQt6>=6.6,<7.0",
+    "filterpy==1.4.5",
+    "onnx>=1.16.0",
+    "onnxruntime>=1.18.0",
+    "opencv-contrib-python==4.6.0.66",
+    "scipy>=1.11,<2.0",
+    "pyautogui>=0.9.54",
+]
+
+[tool.setuptools.package-dir]
+"" = "src" 
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+

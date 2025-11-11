@@ -1,0 +1,24 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+.DS_Store
+
+# Virtual environments
+.venv
+uv.lock
+
+# User configuration (use config.yaml.example as template)
+config.yaml
+
+# Data
+data/
+extra_data/
+
+# Models
+models/
+weights/
