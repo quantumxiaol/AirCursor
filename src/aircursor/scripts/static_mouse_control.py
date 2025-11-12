@@ -77,7 +77,6 @@ class StaticMouseController:
         self.initialized = False
         
         # 时序信息：手势历史记录（用于稳定识别）
-        from collections import deque
         self.gesture_history = deque(maxlen=5)  # 保存最近5帧的手势
         self.stable_gesture = None  # 稳定的手势（经过时序过滤）
         
