@@ -238,7 +238,7 @@ def parse_args() -> TrainingConfig:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("models/static_mlp.pth"),
+        default=Path("modelsweights/static_mlp.pth"),
         help="模型权重输出路径",
     )
     parser.add_argument("--batch-size", type=int, default=64, help="批大小")

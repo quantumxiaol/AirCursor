@@ -141,7 +141,7 @@ python -m aircursor.scripts.static_mouse_control \
 # 使用自训练模型（可选）
 python -m aircursor.scripts.static_mouse_control \
   --landmarker weights/hand_landmarker.task \
-  --model models/static_mlp.pth \
+  --model modelsweights/static_mlp.pth \
   --mirror
 
 # 自定义参数
@@ -398,7 +398,7 @@ AirCursor/
 
 1. 使用上述采集脚本收集 CSV（静态）和 NPY（动态）数据；
 2. 可借助 `python -m aircursor.scripts.label_tool` 快速扩充静态样本；
-3. 可直接运行 `python -m aircursor.scripts.train_static --data-root data/static --output models/static_mlp.pth` 训练静态手势分类器；脚本会自动划分训练/验证集并保存权重。
+3. 可直接运行 `python -m aircursor.scripts.train_static --data-root data/static --output modelsweights/static_mlp.pth` 训练静态手势分类器；脚本会自动划分训练/验证集并保存权重。
 4. 如已采集的是原始图像，可先运行 `python -m aircursor.scripts.convert_static_images --input-root data/static` 将其转换为 21×3 的关键点 CSV，再启动训练。
 5. 训练完的模型可通过 `preview_static_gestures` 实时验证；若表现不佳，可继续采集数据或调优阈值。
 6. 需要更大规模样本时，可借助 `hagrid_import` 脚本从 HaGRID v2 注释中筛选 `open/closed/peace` 等类别并自动生成训练特征；也可结合动态手势模块获取高级交互能力。
