@@ -3,10 +3,11 @@
 
 使用静态手势（石头剪刀布）控制鼠标操作：
 - ✊ 拳头（石头）移动：光标移动
-- ✋ → ✌️ 布变剪刀：左键点击
-- ✊ → ✋ 石头变布：右键点击
-- ✋ 布移动：按下左键拖拽
-- ✌️ 剪刀移动：按下左键拖拽
+- ✊ → ✋ 石头变布：按住左键（可拖拽）
+- ✋ → ✊ 布变拳头：释放左键
+- ✊ → ✋ → ✊ 快速切换：左键点击
+- ✊ → ✌️ 石头变剪刀：右键点击
+- ✌️ 剪刀移动：按住左键拖拽
 """
 
 from __future__ import annotations
@@ -83,10 +84,11 @@ class StaticMouseController:
         print(f"🖥️  屏幕尺寸: {self.screen_width}x{self.screen_height}")
         print(f"📋 手势映射:")
         print(f"  ✊ 拳头移动 → 光标移动")
-        print(f"  ✊ → ✋ 石头变布 → 左键点击")
+        print(f"  ✊ → ✋ 石头变布 → 按住左键（可拖拽）")
+        print(f"  ✋ → ✊ 布变拳头 → 释放左键")
+        print(f"  ✊ → ✋ → ✊ 快速切换 → 左键点击")
         print(f"  ✊ → ✌️  石头变剪刀 → 右键点击")
-        print(f"  ✋ 布移动 → 拖拽（按下左键）")
-        print(f"  ✌️  剪刀移动 → 拖拽（按下左键）")
+        print(f"  ✌️  剪刀移动 → 按住左键拖拽")
         print(f"  ⏱️  使用时序信息稳定手势识别（5帧投票）")
         print()
     
@@ -234,32 +236,27 @@ class StaticMouseController:
             self.current_gesture = gesture
             self.gesture_start_time = current_time
             
-            # 处理手势切换触发的点击
-            if self.previous_gesture and self.current_gesture:
-                # ✊ → ✋ 石头变布 → 左键点击
-                if self.previous_gesture == "closed" and self.current_gesture == "open":
-                    pyautogui.click()
-                    self.last_action_time = current_time
-                    print("🖱️  左键点击（石头→布）")
-                
-                # ✊ → ✌️ 石头变剪刀 → 右键点击
-                elif self.previous_gesture == "closed" and self.current_gesture == "peace":
-                    pyautogui.rightClick()
-                    self.last_action_time = current_time
-                    print("🖱️  右键点击（石头→剪刀）")
-            
-            # 检查是否需要按下鼠标（布或剪刀）
-            if self.current_gesture in ["open", "peace"]:
-                if not self.is_button_down:
-                    pyautogui.mouseDown()
-                    self.is_button_down = True
-                    print(f"🖱️  按下鼠标（{self.current_gesture}）")
+            # 处理特殊的右键点击手势（石头变剪刀）
+            if self.previous_gesture == "closed" and self.current_gesture == "peace":
+                # ✊ → ✌️ 石头变剪刀 → 右键点击（不按住鼠标，避免取消右键菜单）
+                pyautogui.rightClick()
+                self.last_action_time = current_time
+                print("🖱️  右键点击（石头→剪刀）")
+                # 注意：这里不要 mouseDown，让右键菜单保持显示
             else:
-                # 拳头状态，释放鼠标
-                if self.is_button_down:
-                    pyautogui.mouseUp()
-                    self.is_button_down = False
-                    print("🖱️  释放鼠标")
+                # 其他手势切换：正常处理按下/释放
+                if self.current_gesture in ["open", "peace"]:
+                    # 切换到布或剪刀：按下鼠标（用于拖拽）
+                    if not self.is_button_down:
+                        pyautogui.mouseDown()
+                        self.is_button_down = True
+                        print(f"🖱️  按下鼠标（{self.current_gesture}）")
+                else:
+                    # 切换到拳头：释放鼠标
+                    if self.is_button_down:
+                        pyautogui.mouseUp()
+                        self.is_button_down = False
+                        print("🖱️  释放鼠标")
         
         # 根据当前手势移动光标
         if self.current_gesture == "closed":
@@ -431,8 +428,8 @@ class StaticMouseWindow(QtWidgets.QMainWindow):
         
         # 底部帮助信息
         help_lines = [
-            "Fist:Move | Closed->Open:L-Click | Closed->Peace:R-Click",
-            "Open/Peace Move:Drag | Temporal Smoothing(5 frames) | Press 'Q' or ESC to quit",
+            "Fist:Move | Closed->Open:L-Press | Open->Closed:L-Release | Closed->Peace:R-Click",
+            "Open/Peace:Drag | Quick Switch:L-Click | Temporal Smoothing(5) | Q/ESC:Quit",
         ]
         
         y_offset = self.frame_height - 50
@@ -561,10 +558,11 @@ def main():
     print()
     print("📋 手势映射 | Gesture Mapping:")
     print("  ✊ 拳头移动 | Fist Move → 光标移动 | Cursor Move")
-    print("  ✊ → ✋ 石头变布 | Closed->Open → 左键点击 | Left Click")
+    print("  ✊ → ✋ 石头变布 | Closed->Open → 按住左键 | Left Press (Drag)")
+    print("  ✋ → ✊ 布变拳头 | Open->Closed → 释放左键 | Left Release")
+    print("  ✊ → ✋ → ✊ 快速切换 | Quick Switch → 左键点击 | Left Click")
     print("  ✊ → ✌️  石头变剪刀 | Closed->Peace → 右键点击 | Right Click")
-    print("  ✋ 布移动 | Open Move → 拖拽 | Drag")
-    print("  ✌️  剪刀移动 | Peace Move → 拖拽 | Drag")
+    print("  ✌️  剪刀移动 | Peace Move → 按住左键拖拽 | Drag with Left")
     print("  ⏱️  时序稳定 | Temporal Smoothing → 5帧投票机制")
     print()
     
